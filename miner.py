@@ -68,6 +68,6 @@ for i in range(len(scenes_header) - 1):
     #scene = scenes_header[i] + '\n' + scene
     #scenes.append(scene)
     #print(scenes_header[i], scenes_header[i+1])
-    print(screenPlay.index(scenes_header[i]) + len(scenes_header[i]))
+    print()
 
 
