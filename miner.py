@@ -47,27 +47,25 @@ path_pdf = 'C:\\Users\\Snades\\Desktop\\roteiros\\roteiro1.pdf'
 screenPlay = convert_pdf_to_txt(path_pdf)
 block = screenPlay.split('\n')
 scenes_header = []
+scenes_header_numbered = [] #tem o número da cena antes ---> para organizar depois no front-end!
 scenes = []
 count = 1
 
 for line in block:
     if 'EXT.' in line:
-        scenes_header.append(f'Cena {count} - ' + line)
+        scenes_header.append(line)
+        scenes_header_numbered.append(f'Cena {count} - ' + line)
         count += 1
     elif 'INT.' in line:
-        scenes_header.append(f'Cena {count} - ' + line)
+        scenes_header.append(line)
+        scenes_header_numbered.append(f'Cena {count} - ' + line)
         count += 1
 
-#print(scenes_header)
-
-
-print(screenPlay)
 
 for i in range(len(scenes_header) - 1):
     scene = find_between(screenPlay, scenes_header[i], scenes_header[i+1])
-    #scene = scenes_header[i] + '\n' + scene
-    #scenes.append(scene)
-    #print(scenes_header[i], scenes_header[i+1])
-    print()
+    scene = scenes_header[i] + '\n' + scene
+    scenes.append(scene)
 
+print(scenes[0])
 
