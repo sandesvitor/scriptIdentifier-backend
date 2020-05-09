@@ -10,8 +10,3 @@ for block in screenPlay:
     line = block.split('\n')
     lines.append(line)
 
-for x in lines:
-    if x.__contains__('EXT'):
-        print(x)
-
-
