@@ -1,7 +1,7 @@
-from resources import miner
+from resources.scriptMiner import ScriptMiner
 
 roteiro = "C:\\Users\\Snades\\Desktop\\roteiros\\roteiro1.pdf"
 
-obj = miner.ScriptMiner(roteiro)
+obj = ScriptMiner(roteiro)
 
-print(obj.scenesList()[0])
+#print(obj.scenesList()[0])
