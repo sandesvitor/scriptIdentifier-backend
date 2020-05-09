@@ -1,12 +1,7 @@
-screenPlay = open("C:\\Users\\Snades\\Desktop\\roteiros\\roteiro1.txt", "r")
+from resources import miner
 
+roteiro = "C:\\Users\\Snades\\Desktop\\roteiros\\roteiro1.pdf"
 
-scene_bool_1 = "EXT"
-scene_bool_2 = "INT"
-lines = []
+obj = miner.ScriptMiner(roteiro)
 
-    
-for block in screenPlay:
-    line = block.split('\n')
-    lines.append(line)
-
+print(obj.scenesList()[0])
