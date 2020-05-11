@@ -48,13 +48,13 @@ class Application(ScriptMiner):
         self.scriptBox = Text(self.container2)
         self.scriptBox.config(state="normal")
         self.scriptBox.place(width=50, height=200)
-        self.scriptBox["font"] =( "Courier New", "12", "bold") 
+        self.scriptBox["font"] =( "Courier New", "12") 
         self.scriptBox.pack(side=RIGHT)
 
         self.scenesBox = Text(self.container3)
         self.scenesBox.config(state="normal")
         self.scenesBox.place(width=5, height=200)
-        self.scenesBox["font"] =( "Courier New", "12", "bold")
+        self.scenesBox["font"] =( "Courier New", "10", "bold")
         self.scenesBox.pack(side=LEFT)
 
         self.btnScenes = Button(self.container4, text="Scenes", font=self.fonte, width=15, pady=5)
@@ -99,6 +99,8 @@ class Application(ScriptMiner):
         
 
 root = Tk()
-root.geometry("1300x530")
+root.title('Simulation App - Project Screenplay Analytics')
+root.iconbitmap('C:/Users/Snades/apps/project_movieScript/imagens/logo.ico')
+root.geometry("1200x700")
 Application(root)
 root.mainloop()
