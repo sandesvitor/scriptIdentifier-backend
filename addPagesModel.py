@@ -1,4 +1,6 @@
 import tkinter as tk
+from tkinter import *
+from tkinter import filedialog
 
 
 LARGE_FONT=("Verdana, 12")
@@ -27,8 +29,11 @@ class Application(tk.Tk):
         frame.tkraise()
 
 
+def openfile():
+    root.filename = filedialog.askopenfilename(initialdir="/Users/Desktop/roteiros", title="Select File", filetypes=("pdf files", "*.pdf"))
+
 class StartPage(tk.Frame):
-    def __init__(self,parent, controller):
+    def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         label = tk.Label(self, text="Start Page", font=LARGE_FONT)
         label.pack(pady=10, padx=10)
@@ -39,6 +44,9 @@ class StartPage(tk.Frame):
         button2 = tk.Button(self, text="Visit Page 2", command=lambda: controller.show_frame(PageTwo))
         button2.pack()
 
+        button3 = tk.Button(self, text="Open")
+        button3["command"] = openfile
+        button3.pack()
 
 class PageOne(tk.Frame):
     def __init__(self, parent,controller):
@@ -66,5 +74,6 @@ class PageTwo(tk.Frame):
         button1.pack()
       
 
+root = Tk()
 app = Application()
 app.mainloop()
