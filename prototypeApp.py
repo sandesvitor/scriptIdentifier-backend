@@ -10,8 +10,9 @@ root.iconbitmap('C:/Users/Snades/apps/project_movieScript/imagens/logo.ico')
 
             
 
-class Tabs:
+class Tabs(object):
     def __init__(self, master):
+        self.master = master
         self.fonte = ("Verdana", "12", "bold")
         
         self.topTab = Frame(master)
@@ -28,18 +29,31 @@ class Tabs:
         self.lblLeft.pack()
         
 
-        app = GerenciadorRoteiro(self.workspace)
+        self.lblWorkspace = Canvas(self.master, bg="grey", height=700, width=1000)
+        self.lblWorkspace.pack()
+
+
+class Projetos(Tabs):
+    def __init__(self, master):
+        self.frameMaster = master 
         
 
-class GerenciadorRoteiro(Tabs):
-    def __init__(self, parent=None):
-        # Inicializadores Padrão:
-        self.parent = parent
+class Contatos(Tabs):
+    def __init__(self, master):
+        pass
+
+
+class Produtora(Tabs):
+    def __init__(self, master):
+        pass
+
+
+
+class GerenciadorRoteiro(Projetos):
+    def __init__(self, master):
+        self.master = master
         self.fonte = ("Verdana", "12", "bold")
         self.options_list = [0]
-
-        self.lblWorkspace = Canvas(self.parent, bg="grey", height=700, width=1000)
-        self.lblWorkspace.pack()
 
                    
         self.scriptBox = Text(self.lblWorkspace, height=25, width=38)
@@ -50,7 +64,7 @@ class GerenciadorRoteiro(Tabs):
         self.scriptBox.pack()
         #self.verticalSlider = Scale(self.scriptBox, from_=0, to=200)
     
-    def openFile(self):
+    def novoRoteiro(self):
         filename = filedialog.askopenfilename(initialdir="/Users/Snades/Desktop/roteiros", title="Select a File", filetypes=(("pdf files", "*pdf"),("all files", ".")))
         path = filename
 
@@ -64,9 +78,33 @@ class GerenciadorRoteiro(Tabs):
 
         self.clicked = StringVar()
         self.clicked.set(self.options_list[0])
-        self.drop = OptionMenu(self.parent, self.clicked, *self.options_list)
+        self.drop = OptionMenu(self.master, self.clicked, *self.options_list)
         self.drop.pack(side=TOP)
-      
+
+
+class AnaliseTecnica(Projetos):
+    def __init__(self, master):
+        pass
+
+class PlanoDeFilmagem(Projetos):
+    def __init__(self, master):
+        pass
+
+class StoryBoard(Projetos):
+    def __init__(self, master):
+        pass
+
+class OrdemDoDia(Projetos):
+    def __init__(self, master):
+        pass
+
+class Calendario(Projetos):
+    def __init__(self, master):
+        pass
+
+class Equipe(Projetos):
+    def __init__(self, master):
+        pass
         
 
 
@@ -79,8 +117,8 @@ root.config(menu=my_menu)
 
 file_menu = Menu(my_menu)
 my_menu.add_cascade(label="File", menu=file_menu)
-file_menu.add_command(label="New File")
-file_menu.add_command(label="Open File", command=app.openFile)
+file_menu.add_command(label="New Project")
+file_menu.add_command(label="Open Project")
 file_menu.add_command(label="Save")
 file_menu.add_separator()
 file_menu.add_command(label="Open WorkSpace")
