@@ -3,117 +3,82 @@ from tkinter import filedialog
 from resources.scriptMiner import ScriptMiner
 
 root = Tk()
-root.title("Screenplay Analytics")
+root.title("Screenplay Analytics - v 0.1")
 root.iconbitmap('C:/Users/Snades/apps/project_movieScript/imagens/logo.ico')
-#root.geometry("800x800")
+root.geometry("1300x950+100+0")
+#root.resizable(width=False, height=False)
 
+
+FONTE_PADRAO = ("Verdana", "12", "bold")
 
 class Tabs:
-    def __init__(self, master=None):
-        self.fonte = ("Verdana", "12", "bold")
-        
-        self.topTab = Frame(master)
-        self.leftTab = Frame(master)
-        self.workspace = Frame(master)
+    def __init__(self, master):
+        ###### INICIALIZADORES PADRÃO ######
+        self.master = master
+                
+        self.topTab = Frame(master, bd=4, bg="white", relief=RAISED, width=1000, height=80, pady=30)
+        self.leftTab = Frame(master, bd=4, bg="PaleTurquoise1", relief=RAISED, width=50, height=1000, padx=1)
+        self.workspace = Frame(master, bg="gray79", height=690, width=1100, bd=10, relief=SUNKEN)
 
-        self.topTab.pack(side=TOP)
-        self.leftTab.pack(side=LEFT)
-        self.workspace.pack()
-
-        self.lblTop = Label(self.topTab, text="TOP TAB", font=self.fonte)
-        self.lblLeft = Label(self.leftTab, text="LEFT TAB", font=self.fonte)
-        self.lblWorkspace = PanedWindow(self.workspace, bd=100, bg="grey", height=700, width=1000)
-        self.lblTop.pack()
-        self.lblLeft.pack()
-        self.lblWorkspace.pack(anchor="center")
+        self.topTab.pack(side=TOP, fill=BOTH, expand=True)
+        self.leftTab.pack(side=LEFT, fill=BOTH, expand=False)
+        self.workspace.pack(side=RIGHT, fill=BOTH, expand=1)
 
 
-        self.testlbl = Label(self.lblWorkspace, text="CANVAS", font=self.fonte)
-        self.testlbl.pack()
+        ###### MUDANDO DE TABS #####   
+        self.buttonTest = Button(self.topTab, text="ROTEIRO", font=FONTE_PADRAO, width=10, height=2, padx=30)
+        self.buttonTest["command"] = lambda: mudarTab(GerenciadorRoteiro)
+        self.buttonTest.pack(side=LEFT)
 
-"""
+        self.buttonTest = Button(self.topTab, text="PROJETO", font=FONTE_PADRAO, width=10, height=2, padx=30)
+        self.buttonTest["command"] = lambda: mudarTab(TabProjetos)
+        self.buttonTest.pack(side=LEFT)
 
-class Application(ScriptMiner):
-    def __init__(self, master=None):
-        # Inicializadores Padrão:
-        self.fonte = ("Verdana", "12", "bold")
-        self.options_list = [0]
+        self.buttonTest = Button(self.topTab, text="CONTATOS", font=FONTE_PADRAO, width=10, height=2, padx=30)
+        self.buttonTest["command"] = lambda: mudarTab(TabContatos)
+        self.buttonTest.pack(side=LEFT)
 
-        self.frame_0_0 = Frame(master)
-        self.frame_0_1 = Frame(master)
-        self.frame_0_2 = Frame(master)
+   
+class TabProjetos(Tabs):
+    def __init__(self, master):
+        self.frameMaster = master
 
-        self.frame_1_0 = Frame(master)
-        self.frame_1_1 = Frame(master)
-        self.frame_1_2 = Frame(master)
-
-        self.frame_2_0 = Frame(master)
-        self.frame_2_1 = Frame(master)
-        self.frame_2_2 = Frame(master)
-        
-        self.frame_0_0.grid(row=0, column=0)
-        self.frame_0_1.grid(row=0, column=1)
-        self.frame_0_2.grid(row=0, column=2)
-
-        self.frame_1_0.grid(row=1, column=0)
-        self.frame_1_1.grid(row=1, column=1)
-        self.frame_1_2.grid(row=1, column=2)
-
-        self.frame_2_0.grid(row=2, column=0)
-        self.frame_2_1.grid(row=2, column=1)
-        self.frame_2_2.grid(row=2, column=2)
-      
-
-
-        # Top Frame Widgets:
-        self.titulo = Label(self.frame_0_2, text="Screenplay Analytics", font=("Helvetica", "16", "bold"), pady=20, width=30)
-        self.titulo.pack()
-            
-        
-        # Middle Frames Widgets 
-
-        self.canvas = Canvas(self.frame_1_1, width=20, height=25, bg="red")
-        self.canvas.create_text(100, 10, fill="darkblue", font=self.fonte, text="Click the bubblues")    
-        
-        
-        self.scriptBox = Text(self.frame_1_2, height=25, width=38)
-        self.scriptBox.config(state="normal")
-        self.scriptBox["font"] = ( "Courier New", "12") 
-        self.scriptBox["pady"] = 30
-        self.scriptBox["padx"] = 20
-        self.scriptBox.pack()
-        self.verticalSlider = Scale(self.scriptBox, from_=0, to=200)
-
-        self.scenesBox = Text(self.frame_1_1, height=25, width=30)
-        self.scenesBox.config(state="normal")
-        self.scenesBox["font"] = ( "Courier New", "12", "bold") 
-        self.scenesBox["pady"] = 30
-        self.scenesBox["padx"] = 30
-        self.scenesBox.pack(side=BOTTOM)
-
-        self.btnScenes = Button(self.frame_1_0, text="Scenes", font=self.fonte, width=15, pady=5)
-        self.btnScenes.pack()
-
-        self.btnWorkflow = Button(self.frame_1_0, text="Workflow", font=self.fonte, width=15, pady=5)
-        self.btnWorkflow.pack()
-
-        self.btnClassifyElements = Button(self.frame_1_0, text="Classify", font=self.fonte, width=15, pady=5)
-        self.btnClassifyElements.pack()
-
-
-        # Bottom Frame Widgets
-        self.botLabel = Label(self.frame_2_1, text="Bottom Frame", font=self.fonte, pady=30, width=30)
-        self.botLabel.pack()
-
+        self.labeltest = Label(master, text="PROJETOS FUNCIONANDO", font=FONTE_PADRAO)
+        self.labeltest.pack()
         
 
-    # Funções de Application:
-    def myFunction(self):
+class TabContatos(Tabs):
+    def __init__(self, master):
+        self.frameMaster = master
+
+        self.labeltest = Label(master, text="CONTATOS FUNCIONANDO", font=FONTE_PADRAO)
+        self.labeltest.pack()
+
+
+class TabProdutora(Tabs):
+    def __init__(self, master):
         pass
 
-    def openFile(self):
-        self.filename = filedialog.askopenfilename(initialdir="/Users/Snades/Desktop/roteiros", title="Select a File", filetypes=(("pdf files", "*pdf"),("all files", ".")))
-        path = self.filename
+
+
+class GerenciadorRoteiro(Tabs):
+    def __init__(self, master):
+        self.master = master
+        self.options_list = [0]
+
+
+        # Corrigir formatação do texto!!!           
+        self.txtcanvas = Text(master, height=45, width=50, bg="old lace", bd = 8, relief=RAISED)
+        self.txtcanvas.config(state="normal")
+        self.txtcanvas["font"] = ( "Courier New", "12") 
+        self.txtcanvas["pady"] = 53
+        self.txtcanvas["padx"] = 50
+        self.txtcanvas.pack()
+        #self.verticalSlider = Scale(self.scriptBox, from_=0, to=200)
+    
+    def novoRoteiro(self):
+        filename = filedialog.askopenfilename(initialdir="/Users/Snades/Desktop/roteiros", title="Select a File", filetypes=(("pdf files", "*pdf"),("all files", ".")))
+        path = filename
 
         pdf_path = ScriptMiner(path)
         pdf_text = pdf_path.convert_pdf_to_txt()
@@ -125,48 +90,83 @@ class Application(ScriptMiner):
 
         self.clicked = StringVar()
         self.clicked.set(self.options_list[0])
-        self.drop = OptionMenu(self.frame_1_1, self.clicked, *self.options_list)
+        self.drop = OptionMenu(self.master, self.clicked, *self.options_list)
         self.drop.pack(side=TOP)
+
+
+class AnaliseTecnica(TabProjetos):
+    def __init__(self, master):
+        pass
+
+class PlanoDeFilmagem(TabProjetos):
+    def __init__(self, master):
+        pass
+
+class StoryBoard(TabProjetos):
+    def __init__(self, master):
+        pass
+
+class OrdemDoDia(TabProjetos):
+    def __init__(self, master):
+        pass
+
+class Calendario(TabProjetos):
+    def __init__(self, master):
+        pass
+
+class Equipe(TabProjetos):
+    def __init__(self, master):
+        pass
         
-        for scene in pdf_scenes:
-            self.scenesBox.insert(INSERT, scene)
-            self.scenesBox.insert(INSERT, "\n")
 
 
 
-        
-
-
-app = Application(root)
 
 
 my_menu = Menu(root)
 root.config(menu=my_menu)
 
+
 file_menu = Menu(my_menu)
 my_menu.add_cascade(label="File", menu=file_menu)
-file_menu.add_command(label="New File", command=app.myFunction)
-file_menu.add_command(label="Open File", command=app.openFile)
-file_menu.add_command(label="Save", command=app.myFunction)
+file_menu.add_command(label="New Project")
+file_menu.add_command(label="Open Project")
+file_menu.add_command(label="Save")
 file_menu.add_separator()
-file_menu.add_command(label="Open WorkSpace", command=app.myFunction)
+file_menu.add_command(label="Open WorkSpace")
 file_menu.add_command(label="Quit", command=root.quit)
 
 
 edit_menu = Menu(my_menu)
 my_menu.add_cascade(label="Edit", menu=edit_menu)
-edit_menu.add_command(label="Undo    (Ctrl + Z)", command=app.myFunction)
-edit_menu.add_command(label="Redo    (Ctrl + Y)", command=app.myFunction)
+edit_menu.add_command(label="Undo    (Ctrl + Z)")
+edit_menu.add_command(label="Redo    (Ctrl + Y)")
 edit_menu.add_separator()
-edit_menu.add_command(label="Cut     (Ctrl + X)", command=app.myFunction)
-edit_menu.add_command(label="Copy    (Ctrl + C)", command=app.myFunction)
-edit_menu.add_command(label="Paste   (Ctrl + V)", command=app.myFunction)
-edit_menu.add_command(label="Undo    (Ctrl + Z)", command=app.myFunction)
-edit_menu.add_command(label="Find    (Ctrl + F)", command=app.myFunction)
-edit_menu.add_command(label="Replace (Ctrl + H)", command=app.myFunction)
+edit_menu.add_command(label="Cut     (Ctrl + X)")
+edit_menu.add_command(label="Copy    (Ctrl + C)")
+edit_menu.add_command(label="Paste   (Ctrl + V)")
+edit_menu.add_command(label="Undo    (Ctrl + Z)")
+edit_menu.add_command(label="Find    (Ctrl + F)")
+edit_menu.add_command(label="Replace (Ctrl + H)")
 
-"""
+help_menu = Menu(my_menu)
+my_menu.add_cascade(label="Help", menu=help_menu)
+help_menu.add_command(label="Welcome")
+help_menu.add_command(label="Documentation")
+help_menu.add_command(label="About")
 
 
 tabs = Tabs(root)
+
+
+
+
+def mudarTab(paginaClass):
+    this = paginaClass
+    paginaClass.__init__(this, tabs.workspace)
+
+
+
+
+
 root.mainloop()
