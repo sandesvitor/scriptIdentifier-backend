@@ -29,23 +29,40 @@ class PageOne:
     def getFrame(self):
         return self.framePageOne
 
-class GerenciadorRoteiro(ScriptMiner):
+
+class GerenciadorRoteiro:
     def __init__(self, master):
         self.frameGerenciadorRoteiro = Frame(master)
 
-        self.options_list = [0]
-
+        self.options_list = ["Lista de Cenas"]
 
         # Corrigir formatação do texto!!!           
         self.txtcanvas = Text(self.frameGerenciadorRoteiro, height=45, width=50, bg="old lace", bd = 8, relief=RAISED)
         self.txtcanvas.config(state="normal")
         self.txtcanvas["font"] = ("Courier New", "12") 
-        self.txtcanvas["pady"] = 53
+        self.txtcanvas["pady"] = 23
         self.txtcanvas["padx"] = 50
-        self.txtcanvas.insert(INSERT, "DEBBUGING self.novoRoteiro()")
-        self.txtcanvas.pack(side=TOP)
+        self.txtcanvas.pack(side=RIGHT)
+        self.txtcanvas.grid_rowconfigure(0, weight=1)
         #self.verticalSlider = Scale(self.txtcanvas, from_=0, to=200)
-    
+
+
+        self.clicked = StringVar()
+        self.clicked.set(self.options_list[0])
+        self.drop = OptionMenu(self.frameGerenciadorRoteiro, self.clicked, *self.options_list)
+        self.drop.pack(side=TOP)
+
+
+        self.sceneBox = Text(self.frameGerenciadorRoteiro, height=30, width=28, bg="old lace", bd = 8, relief=RAISED)
+        self.sceneBox.config(state="normal")
+        self.sceneBox["font"] = ("Courier New", "10", "bold") 
+        self.sceneBox["pady"] = 10
+        self.sceneBox["padx"] = 50
+        self.sceneBox.pack(side=TOP)
+        self.sceneBox.grid_rowconfigure(0, weight=1)
+
+        
+
     def novoRoteiro(self):
         filename = filedialog.askopenfilename(initialdir="/Users/Snades/Desktop/roteiros", title="Select a File", filetypes=(("pdf files", "*pdf"),("all files", ".")))
         path = filename
@@ -54,22 +71,15 @@ class GerenciadorRoteiro(ScriptMiner):
         pdf_text = pdf_path.convert_pdf_to_txt()
         pdf_scenes = pdf_path.scenesHeaderNumbered()
 
-        print('1')
+        # Remover cabeçalho e rodapé do pdf!!!
 
-        self.txtcanvas.insert(INSERT, "DEBBUG COMPLET")
-
-        print(pdf_scenes)
-
+        self.txtcanvas.insert(INSERT, pdf_text) 
+        self.sceneBox.insert(INSERT, pdf_scenes)   
 
         self.options_list = pdf_scenes 
 
-        self.clicked = StringVar()
-        self.clicked.set(self.options_list[0])
-        self.drop = OptionMenu(self.frameGerenciadorRoteiro, self.clicked, *self.options_list)
-        self.drop.pack(side=TOP)
-
         return path
-     
+
     def getFrame(self):
         return self.frameGerenciadorRoteiro
 
@@ -77,6 +87,29 @@ class GerenciadorRoteiro(ScriptMiner):
 
 ####################################################
 ############   MASTER FRAME (ROOT)  ################
+
+root = Tk()
+root.title("Screenplay Analytics - v 0.1")
+root.iconbitmap('C:/Users/Snades/apps/project_movieScript/imagens/logo.ico')
+root.geometry("1300x950+0+0")  
+
+                
+topTab = Frame(root, bd=4, bg="white", relief=RAISED, width=1000, height=80, pady=30)
+leftTab = Frame(root, bd=4, bg="PaleTurquoise1", relief=RAISED, width=50, height=1000, padx=1)
+workspace = Frame(root, bg="gray79", height=690, width=1100, bd=10, relief=SUNKEN)
+
+topTab.pack(side=TOP, fill=BOTH, expand=True)
+leftTab.pack(side=LEFT, fill=BOTH, expand=False)
+
+workspace.pack(side=RIGHT, fill=BOTH, expand=1)
+workspace.grid_rowconfigure(0, weight=1)
+workspace.grid_columnconfigure(0, weight=1)
+
+
+############################################
+##########   NEW PROJECT   #################
+roteiroObj = GerenciadorRoteiro(workspace)
+
 
 def raise_frame(frame):
     frame.tkraise()
@@ -90,9 +123,7 @@ def sequence(*functions):
         return return_value
     return func
 
-
-def newWindow(master):
-    objFunc = GerenciadorRoteiro(master)
+def newWindow():
 
     new_window = Tk()
     new_window.attributes("-topmost", True)
@@ -114,7 +145,7 @@ def newWindow(master):
 
     def alterLbl():
         new_window.attributes("-topmost", False)
-        lblAddRoteiro["text"] = objFunc.novoRoteiro()
+        lblAddRoteiro["text"] = roteiroObj.novoRoteiro()
         new_window.attributes("-topmost", True)
         btnContinuar["state"] = NORMAL
 
@@ -124,24 +155,8 @@ def newWindow(master):
     btnContinuar = Button(new_window, text="Continuar", font=("Arial", "10", "bold"), state=DISABLED, pady=15, padx=50, command=lambda:sequence(raise_frame(frameRoteiro), new_window.destroy()))
     btnContinuar.grid(row=2, column=2)
 
-
-
-root = Tk()
-root.title("Screenplay Analytics - v 0.1")
-root.iconbitmap('C:/Users/Snades/apps/project_movieScript/imagens/logo.ico')
-root.geometry("1300x950+0+0")  
-
-                
-topTab = Frame(root, bd=4, bg="white", relief=RAISED, width=1000, height=80, pady=30)
-leftTab = Frame(root, bd=4, bg="PaleTurquoise1", relief=RAISED, width=50, height=1000, padx=1)
-workspace = Frame(root, bg="gray79", height=690, width=1100, bd=10, relief=SUNKEN)
-
-topTab.pack(side=TOP, fill=BOTH, expand=True)
-leftTab.pack(side=LEFT, fill=BOTH, expand=False)
-
-workspace.pack(side=RIGHT, fill=BOTH, expand=1)
-workspace.grid_rowconfigure(0, weight=1)
-workspace.grid_columnconfigure(0, weight=1)
+############################################
+############################################
 
 
 tabProject = Label(topTab, text="PROJETOS", font=("Verdana", "10", "italic"), width=10, height=2, padx=30)
@@ -154,7 +169,7 @@ tabProdutora = Label(topTab, text="PRODUTORA", font=("Verdana", "10", "italic"),
 tabProdutora.pack(side=LEFT)
 
 newProject = Button(topTab, text="+ New Project", font=FONTE_PADRAO, width=30, height=4, bd=5, bg="coral3", relief=RAISED)
-newProject["command"] = lambda: newWindow(workspace)
+newProject["command"] = lambda: newWindow()
 newProject.pack(side=RIGHT)
 
 
@@ -166,7 +181,7 @@ root.config(menu=my_menu)
 
 file_menu = Menu(my_menu)
 my_menu.add_cascade(label="File", menu=file_menu)
-file_menu.add_command(label="New Project", command=lambda: newWindow(workspace))
+file_menu.add_command(label="New Project", command=lambda: newWindow())
 file_menu.add_command(label="Open Project")
 file_menu.add_command(label="Save")
 file_menu.add_separator()
@@ -196,15 +211,10 @@ help_menu.add_command(label="About")
 ###############################################
 ############    CHILD FRAMES   ################
 
-"""
-workspace properties:
-bg="gray79", height=690, width=1100, bd=10, relief=SUNKEN
-"""
-
 
 startPageObj = StartPage(workspace)
 pageOneObj = PageOne(workspace)
-roteiroObj = GerenciadorRoteiro(workspace)
+
 
 frameStartPage = startPageObj.getFrame()
 framePageOne = pageOneObj.getFrame()
@@ -219,5 +229,5 @@ for frame in (frameStartPage, framePageOne, frameRoteiro): #always add the new p
 ###############################################
 ############   MAIN PROGRAM   #################
 
-raise_frame(frameStartPage)    
+raise_frame(frameRoteiro)    
 root.mainloop()
