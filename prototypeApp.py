@@ -9,9 +9,9 @@ FONTE_PADRAO = ("Verdana", "10", "bold")
 
 class StartPage:
     def __init__(self, master):
-        self.frameStartPage = Frame(master, bg="gray79", height=690, width=1100)
-        self.label = Label(self.frameStartPage, text="Start Page", font=FONTE_PADRAO, pady= 50, padx=50)
-        self.label.pack()
+        self.frameStartPage = Frame(master, bg="red", height=690, width=1100)
+        self.label = Label(self.frameStartPage, text="Start Page", bg="red", font=FONTE_PADRAO, pady= 20, padx=50)
+        self.label.pack(fill=BOTH, expand=0)
 
         self.button1 = Button(self.frameStartPage, text="Visit Page 1", command=lambda: raise_frame(framePageOne))
         self.button1.pack()
@@ -22,14 +22,14 @@ class StartPage:
 
 class PageOne:
     def __init__(self, master):
-        self.framePageOne = Frame(master, bg="gray79", height=690, width=1100)
-        self.label = Label(self.framePageOne, text="Page One", font=FONTE_PADRAO, pady=50, padx=50)
-        self.label.pack(side=TOP, fill=BOTH, expand=True)
+        self.framePageOne = Frame(master, bg="black", height=690, width=1100)
+        #self.label = Label(self.framePageOne, text="Page One", font=FONTE_PADRAO, pady=50, padx=50)
+        #self.label.pack(fill=BOTH, expand=True)
 
     def getFrame(self):
         return self.framePageOne
 
-class GerenciadorRoteiro:
+class GerenciadorRoteiro(ScriptMiner):
     def __init__(self, master):
         self.frameGerenciadorRoteiro = Frame(master)
 
@@ -39,11 +39,12 @@ class GerenciadorRoteiro:
         # Corrigir formatação do texto!!!           
         self.txtcanvas = Text(self.frameGerenciadorRoteiro, height=45, width=50, bg="old lace", bd = 8, relief=RAISED)
         self.txtcanvas.config(state="normal")
-        self.txtcanvas["font"] = ( "Courier New", "12") 
+        self.txtcanvas["font"] = ("Courier New", "12") 
         self.txtcanvas["pady"] = 53
         self.txtcanvas["padx"] = 50
+        self.txtcanvas.insert(INSERT, "DEBBUGING self.novoRoteiro()")
         self.txtcanvas.pack(side=TOP)
-        #self.verticalSlider = Scale(self.scriptBox, from_=0, to=200)
+        #self.verticalSlider = Scale(self.txtcanvas, from_=0, to=200)
     
     def novoRoteiro(self):
         filename = filedialog.askopenfilename(initialdir="/Users/Snades/Desktop/roteiros", title="Select a File", filetypes=(("pdf files", "*pdf"),("all files", ".")))
@@ -53,7 +54,12 @@ class GerenciadorRoteiro:
         pdf_text = pdf_path.convert_pdf_to_txt()
         pdf_scenes = pdf_path.scenesHeaderNumbered()
 
-        self.txtcanvas.insert(INSERT, pdf_text)
+        print('1')
+
+        self.txtcanvas.insert(INSERT, "DEBBUG COMPLET")
+
+        print(pdf_scenes)
+
 
         self.options_list = pdf_scenes 
 
@@ -76,30 +82,46 @@ def raise_frame(frame):
     frame.tkraise()
 
 
+def sequence(*functions):
+    def func(*args, **kwargs):
+        return_value = None
+        for function in functions:
+            return_value = function(*args, **kwargs)
+        return return_value
+    return func
+
+
 def newWindow(master):
     objFunc = GerenciadorRoteiro(master)
 
     new_window = Tk()
+    new_window.attributes("-topmost", True)
     new_window.title("New Project")
-    new_window.geometry("450x230+450+475")
+    new_window.geometry("520x230+450+475")
     new_window.resizable(width=False, height=False)
 
-    lblnew = Label(new_window, text="Nome do Projeto", font=("Arial", "13", "bold"), pady=30, padx=50)
-    lblnew.grid(row=0, column=0)
+    lblNewProject = Label(new_window, text="Nome do Projeto", font=("Arial", "13", "bold"), pady=30, padx=50)
+    lblNewProject.grid(row=0, column=0)
     
-    entrynew = Entry(new_window, width=30)
-    entrynew.grid(row=1, column=0)
+    entryNewProject = Entry(new_window, width=30)
+    entryNewProject.grid(row=1, column=0)
     
-    separador = Canvas(new_window, bg="grey", bd=1, width=2, height=200, relief=SOLID)
-    separador.grid(row=0, column=1, rowspan=3)
+    separador_barra = Canvas(new_window, bg="grey", bd=1, width=2, height=200, relief=RAISED)
+    separador_barra.grid(row=0, column=1, rowspan=3)
 
-    lblAdd_roteiro = Label(new_window, text="Importe o pdf", pady=30)
-    lblAdd_roteiro.grid(row=1, column=2)
+    lblAddRoteiro = Label(new_window, text="Importe o pdf", pady=30)
+    lblAddRoteiro.grid(row=1, column=2)
 
-    add_roteiro = Button(new_window, text="+ Adicionar Roteiro", font=("Arial", "10", "bold"), pady=30, padx=50, command=lambda: objFunc.novoRoteiro)
-    add_roteiro.grid(row=0, column=2)
-    
-    btnContinuar = Button(new_window, text="Continuar", font=("Arial", "10", "bold"), pady=15, padx=50, command=lambda: new_window.destroy())
+    def alterLbl():
+        new_window.attributes("-topmost", False)
+        lblAddRoteiro["text"] = objFunc.novoRoteiro()
+        new_window.attributes("-topmost", True)
+        btnContinuar["state"] = NORMAL
+
+    btnAddRoteiro = Button(new_window, text="+ Adicionar Roteiro", font=("Arial", "10", "bold"), pady=30, padx=50, command=lambda: alterLbl())
+    btnAddRoteiro.grid(row=0, column=2)
+
+    btnContinuar = Button(new_window, text="Continuar", font=("Arial", "10", "bold"), state=DISABLED, pady=15, padx=50, command=lambda:sequence(raise_frame(frameRoteiro), new_window.destroy()))
     btnContinuar.grid(row=2, column=2)
 
 
@@ -116,7 +138,10 @@ workspace = Frame(root, bg="gray79", height=690, width=1100, bd=10, relief=SUNKE
 
 topTab.pack(side=TOP, fill=BOTH, expand=True)
 leftTab.pack(side=LEFT, fill=BOTH, expand=False)
+
 workspace.pack(side=RIGHT, fill=BOTH, expand=1)
+workspace.grid_rowconfigure(0, weight=1)
+workspace.grid_columnconfigure(0, weight=1)
 
 
 tabProject = Label(topTab, text="PROJETOS", font=("Verdana", "10", "italic"), width=10, height=2, padx=30)

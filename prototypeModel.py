@@ -10,7 +10,7 @@ FONTE_PADRAO = ("Verdana", "10", "bold")
 class StartPage:
     def __init__(self, master):
         self.frameStartPage = Frame(master, bg="red", height=690, width=1100)
-        self.label = Label(self.frameStartPage, text="Start Page", fg="white", bg="red", font=FONTE_PADRAO, pady= 20, padx=50)
+        self.label = Label(self.frameStartPage, text="Start Page", bg="red", font=FONTE_PADRAO, pady= 20, padx=50)
         self.label.pack(fill=BOTH, expand=0)
 
         self.button1 = Button(self.frameStartPage, text="Visit Page 1", command=lambda: raise_frame(framePageOne))
@@ -29,7 +29,7 @@ class PageOne:
     def getFrame(self):
         return self.framePageOne
 
-class GerenciadorRoteiro:
+class GerenciadorRoteiro(ScriptMiner):
     def __init__(self, master):
         self.frameGerenciadorRoteiro = Frame(master)
 
@@ -39,11 +39,12 @@ class GerenciadorRoteiro:
         # Corrigir formatação do texto!!!           
         self.txtcanvas = Text(self.frameGerenciadorRoteiro, height=45, width=50, bg="old lace", bd = 8, relief=RAISED)
         self.txtcanvas.config(state="normal")
-        self.txtcanvas["font"] = ( "Courier New", "12") 
+        self.txtcanvas["font"] = ("Courier New", "12") 
         self.txtcanvas["pady"] = 53
         self.txtcanvas["padx"] = 50
+        self.txtcanvas.insert(INSERT, "DEBBUGING self.novoRoteiro()")
         self.txtcanvas.pack(side=TOP)
-        #self.verticalSlider = Scale(self.scriptBox, from_=0, to=200)
+        #self.verticalSlider = Scale(self.txtcanvas, from_=0, to=200)
     
     def novoRoteiro(self):
         filename = filedialog.askopenfilename(initialdir="/Users/Snades/Desktop/roteiros", title="Select a File", filetypes=(("pdf files", "*pdf"),("all files", ".")))
@@ -53,7 +54,12 @@ class GerenciadorRoteiro:
         pdf_text = pdf_path.convert_pdf_to_txt()
         pdf_scenes = pdf_path.scenesHeaderNumbered()
 
-        self.txtcanvas.insert(INSERT, pdf_text)
+        print('1')
+
+        self.txtcanvas.insert(INSERT, "DEBBUG COMPLET")
+
+        print(pdf_scenes)
+
 
         self.options_list = pdf_scenes 
 
@@ -110,11 +116,12 @@ def newWindow(master):
         new_window.attributes("-topmost", False)
         lblAddRoteiro["text"] = objFunc.novoRoteiro()
         new_window.attributes("-topmost", True)
+        btnContinuar["state"] = NORMAL
 
     btnAddRoteiro = Button(new_window, text="+ Adicionar Roteiro", font=("Arial", "10", "bold"), pady=30, padx=50, command=lambda: alterLbl())
     btnAddRoteiro.grid(row=0, column=2)
 
-    btnContinuar = Button(new_window, text="Continuar", font=("Arial", "10", "bold"), pady=15, padx=50, command=lambda: new_window.destroy())
+    btnContinuar = Button(new_window, text="Continuar", font=("Arial", "10", "bold"), state=DISABLED, pady=15, padx=50, command=lambda:sequence(raise_frame(frameRoteiro), new_window.destroy()))
     btnContinuar.grid(row=2, column=2)
 
 
