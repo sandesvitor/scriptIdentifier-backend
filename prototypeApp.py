@@ -7,15 +7,22 @@ from resources.scriptMiner import ScriptMiner
 FONTE_PADRAO = ("Verdana", "10", "bold")
 
 
+####################################################
+############   CLASS DEFINITIONS  ##################
+
 class StartPage:
     def __init__(self, master):
-        self.frameStartPage = Frame(master, bg="red", height=690, width=1100)
-        self.label = Label(self.frameStartPage, text="Start Page", bg="red", font=FONTE_PADRAO, pady= 20, padx=50)
+        self.frameStartPage = Frame(master, bg="gray79", height=690, width=1100)
+        self.label = Label(self.frameStartPage, text="Escrivaninha de Projetos\n(para começar, por favor crie uma nova pasta de projetos)", bg="gray79", font=("Courier New", "16", "bold"), pady= 20, padx=50)
         self.label.pack(fill=BOTH, expand=0)
 
-        self.button1 = Button(self.frameStartPage, text="Visit Page 1", command=lambda: raise_frame(framePageOne))
+        self.button1 = Button(self.frameStartPage, text="Primeiro Projeto", state=NORMAL,command=lambda: self.firstProject())
         self.button1.pack()
     
+    def firstProject(self):
+        newWindow()
+        self.button1.destroy
+
     def getFrame(self):
         return self.frameStartPage
 
@@ -33,6 +40,9 @@ class PageOne:
 class GerenciadorRoteiro:
     def __init__(self, master):
         self.frameGerenciadorRoteiro = Frame(master)
+        self.frameGerenciadorRoteiro.grid_columnconfigure(0, minsize=400)
+        self.frameGerenciadorRoteiro.grid_columnconfigure(1, minsize=400)
+        self.frameGerenciadorRoteiro.grid_columnconfigure(3, minsize=600)
 
         self.options_list = ["Lista de Cenas"]
 
@@ -40,26 +50,26 @@ class GerenciadorRoteiro:
         self.txtcanvas = Text(self.frameGerenciadorRoteiro, height=45, width=50, bg="old lace", bd = 8, relief=RAISED)
         self.txtcanvas.config(state="normal")
         self.txtcanvas["font"] = ("Courier New", "12") 
-        self.txtcanvas["pady"] = 23
-        self.txtcanvas["padx"] = 50
-        self.txtcanvas.pack(side=RIGHT)
-        self.txtcanvas.grid_rowconfigure(0, weight=1)
-        #self.verticalSlider = Scale(self.txtcanvas, from_=0, to=200)
-
+        self.txtcanvas["pady"] = 10
+        self.txtcanvas["padx"] = 10
+        self.txtcanvas.grid(row=0, column=3)
+        
+        self.verticalSlider = Scale(self.frameGerenciadorRoteiro, from_=0, to=1000)
+        self.verticalSlider.grid(row=0, column=4)
 
         self.clicked = StringVar()
         self.clicked.set(self.options_list[0])
         self.drop = OptionMenu(self.frameGerenciadorRoteiro, self.clicked, *self.options_list)
-        self.drop.pack(side=TOP)
+        self.drop.grid(row=0, column=1, rowspan=2)
+        self.drop.grid_columnconfigure(1, weight=1)
 
-
-        self.sceneBox = Text(self.frameGerenciadorRoteiro, height=30, width=28, bg="old lace", bd = 8, relief=RAISED)
+        self.sceneBox = Text(self.frameGerenciadorRoteiro, height=30, width=48, bg="white", bd = 8, relief=RAISED)
         self.sceneBox.config(state="normal")
         self.sceneBox["font"] = ("Courier New", "10", "bold") 
         self.sceneBox["pady"] = 10
-        self.sceneBox["padx"] = 50
-        self.sceneBox.pack(side=TOP)
-        self.sceneBox.grid_rowconfigure(0, weight=1)
+        self.sceneBox["padx"] = 10
+        self.sceneBox.grid(row=0, column=1, rowspan=2)
+        self.sceneBox.grid_columnconfigure(1, weight=1)
 
         
 
@@ -91,7 +101,7 @@ class GerenciadorRoteiro:
 root = Tk()
 root.title("Screenplay Analytics - v 0.1")
 root.iconbitmap('C:/Users/Snades/apps/project_movieScript/imagens/logo.ico')
-root.geometry("1300x950+0+0")  
+root.geometry("1500x1100+0+0")  
 
                 
 topTab = Frame(root, bd=4, bg="white", relief=RAISED, width=1000, height=80, pady=30)
@@ -106,8 +116,8 @@ workspace.grid_rowconfigure(0, weight=1)
 workspace.grid_columnconfigure(0, weight=1)
 
 
-############################################
-##########   NEW PROJECT   #################
+#############################################
+###########   NEW PROJECT   #################
 roteiroObj = GerenciadorRoteiro(workspace)
 
 
@@ -128,6 +138,7 @@ def newWindow():
     new_window = Tk()
     new_window.attributes("-topmost", True)
     new_window.title("New Project")
+    new_window.iconbitmap('C:/Users/Snades/apps/project_movieScript/imagens/logo.ico')
     new_window.geometry("520x230+450+475")
     new_window.resizable(width=False, height=False)
 
@@ -155,8 +166,9 @@ def newWindow():
     btnContinuar = Button(new_window, text="Continuar", font=("Arial", "10", "bold"), state=DISABLED, pady=15, padx=50, command=lambda:sequence(raise_frame(frameRoteiro), new_window.destroy()))
     btnContinuar.grid(row=2, column=2)
 
-############################################
-############################################
+
+#############################################
+#########  HIGH HIERARCHY WIDGETS  ##########
 
 
 tabProject = Label(topTab, text="PROJETOS", font=("Verdana", "10", "italic"), width=10, height=2, padx=30)
@@ -171,7 +183,6 @@ tabProdutora.pack(side=LEFT)
 newProject = Button(topTab, text="+ New Project", font=FONTE_PADRAO, width=30, height=4, bd=5, bg="coral3", relief=RAISED)
 newProject["command"] = lambda: newWindow()
 newProject.pack(side=RIGHT)
-
 
 
 
@@ -229,5 +240,5 @@ for frame in (frameStartPage, framePageOne, frameRoteiro): #always add the new p
 ###############################################
 ############   MAIN PROGRAM   #################
 
-raise_frame(frameRoteiro)    
+raise_frame(frameStartPage)    
 root.mainloop()
