@@ -53,13 +53,13 @@ class GerenciadorRoteiro:
         pdf_text = pdf_path.convert_pdf_to_txt()
         pdf_scenes = pdf_path.scenesHeaderNumbered()
 
-        self.scriptBox.insert(INSERT, pdf_text)
+        self.txtcanvas.insert(INSERT, pdf_text)
 
         self.options_list = pdf_scenes 
 
         self.clicked = StringVar()
         self.clicked.set(self.options_list[0])
-        self.drop = OptionMenu(self.master, self.clicked, *self.options_list)
+        self.drop = OptionMenu(self.frameGerenciadorRoteiro, self.clicked, *self.options_list)
         self.drop.pack(side=TOP)
 
         return path
