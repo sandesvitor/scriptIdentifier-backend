@@ -1,4 +1,5 @@
 from tkinter import *
+import tkinter
 from tkinter import filedialog
 from resources.scriptMiner import ScriptMiner
 
@@ -14,7 +15,6 @@ FONTE_PADRAO = ("Verdana", "12", "bold")
 class Tabs:
     def __init__(self, master):
         ###### INICIALIZADORES PADRÃO ######
-        self.master = master
                 
         self.topTab = Frame(master, bd=4, bg="white", relief=RAISED, width=1000, height=80, pady=30)
         self.leftTab = Frame(master, bd=4, bg="PaleTurquoise1", relief=RAISED, width=50, height=1000, padx=1)
@@ -25,25 +25,26 @@ class Tabs:
         self.workspace.pack(side=RIGHT, fill=BOTH, expand=1)
 
 
-        ###### MUDANDO DE TABS #####   
-        self.buttonTest = Button(self.topTab, text="ROTEIRO", font=FONTE_PADRAO, width=10, height=2, padx=30)
-        self.buttonTest["command"] = lambda: mudarTab(GerenciadorRoteiro)
-        self.buttonTest.pack(side=LEFT)
+        self.tabProject = Label(self.topTab, text="PROJETOS", font=("Verdana", "10", "italic"), width=10, height=2, padx=30)
+        self.tabProject.pack(side=LEFT)
 
-        self.buttonTest = Button(self.topTab, text="PROJETO", font=FONTE_PADRAO, width=10, height=2, padx=30)
-        self.buttonTest["command"] = lambda: mudarTab(TabProjetos)
-        self.buttonTest.pack(side=LEFT)
+        self.tabContacts = Label(self.topTab, text="CONTATOS", font=("Verdana", "10", "italic"), width=10, height=2, padx=30)
+        self.tabContacts.pack(side=LEFT)
 
-        self.buttonTest = Button(self.topTab, text="CONTATOS", font=FONTE_PADRAO, width=10, height=2, padx=30)
-        self.buttonTest["command"] = lambda: mudarTab(TabContatos)
-        self.buttonTest.pack(side=LEFT)
+        self.tabProdutora = Label(self.topTab, text="PRODUTORA", font=("Verdana", "10", "italic"), width=10, height=2, padx=30)
+        self.tabProdutora.pack(side=LEFT)
 
+
+def raiseFrame(self, frame):
+    frame.tkraise()
    
 class TabProjetos(Tabs):
     def __init__(self, master):
         self.frameMaster = master
 
-        self.labeltest = Label(master, text="PROJETOS FUNCIONANDO", font=FONTE_PADRAO)
+        self.frameChild = Frame(self.frameMaster)
+
+        self.labeltest = Label(self.frameChild, text="PROJETOS FUNCIONANDO", font=FONTE_PADRAO)
         self.labeltest.pack()
         
 
@@ -51,7 +52,9 @@ class TabContatos(Tabs):
     def __init__(self, master):
         self.frameMaster = master
 
-        self.labeltest = Label(master, text="CONTATOS FUNCIONANDO", font=FONTE_PADRAO)
+        self.frameChild = Frame(self.frameMaster)
+
+        self.labeltest = Label(self.frameChild, text="CONTATOS FUNCIONANDO", font=FONTE_PADRAO)
         self.labeltest.pack()
 
 
@@ -64,11 +67,14 @@ class TabProdutora(Tabs):
 class GerenciadorRoteiro(Tabs):
     def __init__(self, master):
         self.master = master
+
+        self.frameChild = Frame(self.master)
+
         self.options_list = [0]
 
 
         # Corrigir formatação do texto!!!           
-        self.txtcanvas = Text(master, height=45, width=50, bg="old lace", bd = 8, relief=RAISED)
+        self.txtcanvas = Text(self.frameChild, height=45, width=50, bg="old lace", bd = 8, relief=RAISED)
         self.txtcanvas.config(state="normal")
         self.txtcanvas["font"] = ( "Courier New", "12") 
         self.txtcanvas["pady"] = 53
@@ -156,15 +162,25 @@ help_menu.add_command(label="Documentation")
 help_menu.add_command(label="About")
 
 
+
+##########  MAIN PROGRAM  ##########
+def raiseFrame(frame):
+    frame.tkraise()
+
+
 tabs = Tabs(root)
+new_root = tabs.workspace
+
+frameProjetos = TabProjetos(new_root).frameChild
+frameContatos = TabContatos(new_root).frameChild
+frameRoteiro = GerenciadorRoteiro(new_root).frameChild
 
 
+for frame in (frameProjetos, frameContatos, frameRoteiro):
+    frame.pack()
 
 
-def mudarTab(paginaClass):
-    this = paginaClass
-    paginaClass.__init__(this, tabs.workspace)
-
+raiseFrame(frameProjetos)
 
 
 

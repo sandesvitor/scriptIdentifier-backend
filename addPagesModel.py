@@ -74,6 +74,6 @@ class PageTwo(tk.Frame):
         button1.pack()
       
 
-root = Tk()
+#root = Tk()
 app = Application()
 app.mainloop()
